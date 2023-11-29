@@ -50,7 +50,8 @@ fun SurveyPageOne(
         "Disagree",
         "Neutral",
         "Agree",
-        "Strongly Agree")
+        "Strongly Agree"
+    )
     val labelsFor7PointScale = listOf(
         "Strongly Disagree",
         "Disagree",

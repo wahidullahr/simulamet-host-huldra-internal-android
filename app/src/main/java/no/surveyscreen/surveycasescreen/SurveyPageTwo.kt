@@ -33,6 +33,7 @@ fun SurveyPageTwo(
     viewModel: SurveyViewModel,
     onNavigateBack: () -> Unit,
     onNavigateNext: () -> Unit,
+    function: () -> Unit,
 ) {
     // This would be your screen state that manages the Likert scale selections
     var fivePointScaleValue by remember { mutableFloatStateOf(0f) }
@@ -46,7 +47,7 @@ fun SurveyPageTwo(
                 .weight(1f)
                 .padding(16.dp)
         ) {
-            Text("Feedback Sample Label Second 1/4", style = MaterialTheme.typography.bodySmall)
+            Text("Feedback Sample Label Second 2/4", style = MaterialTheme.typography.bodySmall)
             Text("Feedback sample text second", style = MaterialTheme.typography.titleSmall)
             // Video placeholder
             Box(
@@ -115,6 +116,7 @@ fun SurveyPageTwo(
     }
 }
 
+
 @Composable
 fun FivePointLikertScale(
     question: String,
@@ -128,22 +130,18 @@ fun FivePointLikertScale(
             value = chosenValue,
             onValueChange = onValueChange,
             valueRange = 1f..5f,
-            steps = 4,
-            onValueChangeFinished = {
-                // Logic when slider value change is completed
-            }
+            steps = 0 // Making it 0 for a continuous slider
         )
 
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 8.dp),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            (1..5).forEach { i ->
-                Text(text = i.toString())
-            }
-        }
+        // Display the chosen value
+        Text(
+            "Chosen value: %.1f".format(chosenValue),
+            style = MaterialTheme.typography.titleSmall,
+            modifier = Modifier.align(Alignment.CenterHorizontally)
+        )
+
+        // Labels for the slider
+        NumericLabelsForSlider(points = 5)
     }
 }
 
@@ -160,22 +158,33 @@ fun SevenPointHorizontalContinuousLikertScale(
             value = chosenValue,
             onValueChange = onValueChange,
             valueRange = 1f..7f,
-            steps = 6,
-            onValueChangeFinished = {
-                // Logic when slider value change is completed
-            }
+            steps = 0 // Making it 0 for a continuous slider
         )
 
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 8.dp),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            (1..7).forEach { i ->
-                Text(text = i.toString())
-            }
+        // Display the chosen value
+        Text(
+            "Chosen value: %.1f".format(chosenValue),
+            style = MaterialTheme.typography.titleSmall,
+            modifier = Modifier.align(Alignment.CenterHorizontally)
+        )
+
+        // Labels for the slider
+        NumericLabelsForSlider(points = 7)
+    }
+}
+
+@Composable
+fun NumericLabelsForSlider(points: Int) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 8.dp),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        (1..points).forEach { i ->
+            Text(text = i.toString())
         }
     }
 }
+
 

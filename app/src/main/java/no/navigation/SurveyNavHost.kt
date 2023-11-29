@@ -9,6 +9,7 @@ import no.model.SurveyViewModel
 import no.surveyscreen.backgroundscreen.BackgroundPage
 import no.surveyscreen.homescreen.HomePage
 import no.surveyscreen.surveycasescreen.SurveyPageOne
+import no.surveyscreen.surveycasescreen.SurveyPageThree
 import no.surveyscreen.surveycasescreen.SurveyPageTwo
 import no.surveyscreen.userinfoscreen.UserInfoPage
 
@@ -55,8 +56,16 @@ fun SurveyNavHost(
         composable(SurveyDestinations.SURVEYPAGETWO_ROUTE) {
             SurveyPageTwo(
                 viewModel=viewModel,
-                onNavigateBack = { navController.navigate(SurveyDestinations.SURVEYPAGEONE_ROUTE) }) {
+                onNavigateBack = { navController.navigate(SurveyDestinations.SURVEYPAGEONE_ROUTE) },
+                onNavigateNext = { navController.navigate(SurveyDestinations.SURVEYPAGETHREE_ROUTE) }) {
             }
+        }
+        composable(SurveyDestinations.SURVEYPAGETHREE_ROUTE) {
+            SurveyPageThree(
+                viewModel=viewModel,
+                onNavigateBack = { navController.navigate(SurveyDestinations.SURVEYPAGETWO_ROUTE) },
+                {
+                })
         }
     }
 }
