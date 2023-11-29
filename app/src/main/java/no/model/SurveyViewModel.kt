@@ -32,8 +32,7 @@ class SurveyViewModel : ViewModel() {
     fun areFieldsValid(): Boolean {
         return name.isNotBlank() &&
                 email.isNotBlank() &&
-                country.isNotBlank() &&
-                selectedDegree != Degree.None
+                country.isNotBlank() && agreeToParticipate && selectedDegree != Degree.None
         // Add other checks for other fields as necessary
     }
 }

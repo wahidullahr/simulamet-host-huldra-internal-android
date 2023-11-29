@@ -1,65 +1,44 @@
 package no.surveyscreen.surveycasescreen
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.RadioButton
+import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import no.huldreonlinesurvey.R
 import no.model.SurveyViewModel
 
 @Composable
-fun SurveyPageOne(
+fun SurveyPageTwo(
     viewModel: SurveyViewModel,
     onNavigateBack: () -> Unit,
     onNavigateNext: () -> Unit,
-    function: () -> Unit,
 ) {
     // This would be your screen state that manages the Likert scale selections
-    var opinionSelection by remember { mutableIntStateOf(0) } // Starts from 0 if nothing is selected
-    var themeSelection by remember { mutableIntStateOf(0) }
+    var fivePointScaleValue by remember { mutableFloatStateOf(0f) }
+    var sevenPointScaleValue by remember { mutableFloatStateOf(0f) }
 
     // Define your labels for the 5-point and 7-point Likert scales
-    val labelsFor5PointScale = listOf(
-        "Strongly Disagree",
-        "Disagree",
-        "Neutral",
-        "Agree",
-        "Strongly Agree")
-    val labelsFor7PointScale = listOf(
-        "Strongly Disagree",
-        "Disagree",
-        "Somewhat Disagree",
-        "Neutral",
-        "Somewhat Agree",
-        "Agree",
-        "Strongly Agree"
-    )
 
     Column(modifier = Modifier.fillMaxSize()) {
         Column(
@@ -86,24 +65,25 @@ fun SurveyPageOne(
                 .weight(1f)
                 .padding(16.dp)
         ) {
-            Text("Please answer the questions below!", style = MaterialTheme.typography.titleSmall)
-
-            Spacer(modifier = Modifier.height(5.dp))
-
-            LikertScale(
-                labels = labelsFor5PointScale,
-                question = "Opinion on the subject in the video (optional)",
-                selectedOption = opinionSelection,
-                onOptionSelected = { opinionSelection = it }
+            Text(
+                "Please answer the questions below!",
+                style = MaterialTheme.typography.titleSmall
             )
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            LikertScale(
-                labels = labelsFor7PointScale,
+            FivePointLikertScale(
+                question = "Opinion on the subject in the video (optional)",
+                chosenValue = fivePointScaleValue,
+                onValueChange = { newValue -> fivePointScaleValue = newValue }
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            SevenPointHorizontalContinuousLikertScale(
                 question = "Question about opinion on the theme (optional)",
-                selectedOption = themeSelection,
-                onOptionSelected = { themeSelection = it }
+                chosenValue = sevenPointScaleValue,
+                onValueChange = { newValue -> sevenPointScaleValue = newValue }
             )
         }
 
@@ -118,10 +98,16 @@ fun SurveyPageOne(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Button(colors = ButtonDefaults.buttonColors(colorResource(R.color.soft_blue)),onClick = onNavigateBack) {
-                    Text("Back",color = Color.Black)
+                Button(
+                    colors = ButtonDefaults.buttonColors(colorResource(R.color.soft_blue)),
+                    onClick = onNavigateBack
+                ) {
+                    Text("Back", color = Color.Black)
                 }
-                Button(colors = ButtonDefaults.buttonColors(colorResource(R.color.soft_blue)),onClick = onNavigateNext) {
+                Button(
+                    colors = ButtonDefaults.buttonColors(colorResource(R.color.soft_blue)),
+                    onClick = onNavigateNext
+                ) {
                     Text("Next", color = Color.Black)
                 }
             }
@@ -130,43 +116,66 @@ fun SurveyPageOne(
 }
 
 @Composable
-fun LikertScale(
-    labels: List<String>, // Pass the labels as a list of strings
+fun FivePointLikertScale(
     question: String,
-    selectedOption: Int,
-    onOptionSelected: (Int) -> Unit
+    chosenValue: Float,
+    onValueChange: (Float) -> Unit
 ) {
     Column {
         Text(question, style = MaterialTheme.typography.titleSmall)
+
+        Slider(
+            value = chosenValue,
+            onValueChange = onValueChange,
+            valueRange = 1f..5f,
+            steps = 4,
+            onValueChangeFinished = {
+                // Logic when slider value change is completed
+            }
+        )
+
         Row(
             modifier = Modifier
-                .horizontalScroll(rememberScrollState())
-                .padding(vertical = 8.dp),
-            horizontalArrangement = Arrangement.SpaceEvenly
+                .fillMaxWidth()
+                .padding(top = 8.dp),
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            labels.forEachIndexed { index, label ->
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.padding(horizontal = 8.dp)
-                ) {
-                    RadioButton(
-                        selected = selectedOption == index + 1,
-                        onClick = { onOptionSelected(index + 1) }
-                    )
-                    // Split the label into two lines if it has two words
-                    Text(
-                        text = label,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.width(IntrinsicSize.Min)
-                    )
-                    Spacer(modifier = Modifier.height(4.dp)) // Adjust the height as needed
-                }
+            (1..5).forEach { i ->
+                Text(text = i.toString())
             }
         }
     }
 }
 
+@Composable
+fun SevenPointHorizontalContinuousLikertScale(
+    question: String,
+    chosenValue: Float,
+    onValueChange: (Float) -> Unit
+) {
+    Column {
+        Text(question, style = MaterialTheme.typography.titleSmall)
 
+        Slider(
+            value = chosenValue,
+            onValueChange = onValueChange,
+            valueRange = 1f..7f,
+            steps = 6,
+            onValueChangeFinished = {
+                // Logic when slider value change is completed
+            }
+        )
 
-
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 8.dp),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            (1..7).forEach { i ->
+                Text(text = i.toString())
+            }
+        }
+    }
+}
 

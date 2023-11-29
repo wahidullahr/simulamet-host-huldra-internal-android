@@ -8,4 +8,14 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="yellow">#D6AC32</color>
+    <color name="soft_blue">#AED6F1</color>
+    <color name="light_grey">#D3D3D3</color>
+    <color name="dark_blue">#3E77B8</color> <!-- This is a mid-tone blue, adjust as needed -->
+    <color name="seafoam">#93E9BE</color>
+    <color name="silver">#C0C0C0</color>
+    <color name="metallic_grey">#A8A9AD</color>
+    <color name="mint_green">#98FF98</color>
+    <color name="taupe">#483C32</color>
+    <color name="lavender">#E6E6FA</color>
+    <color name="sandy_beige">#F4A460</color>
 </resources>
